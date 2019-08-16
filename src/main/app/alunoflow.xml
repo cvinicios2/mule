@@ -22,12 +22,13 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
                 </db:select>
                 <json:object-to-json-transformer doc:name="Object to JSON"/>
             </when>
-            <otherwise>
+            <when expression="#[message.inboundProperties.'http.method' == 'POST']">
                 <json:json-to-object-transformer returnClass="java.lang.Object" doc:name="JSON to Object"/>
                 <db:insert config-ref="MySQL_Configuration1" doc:name="insertAluno">
                     <db:parameterized-query><![CDATA[insert into ALUNO values (#[message.payload.rm], #[message.payload.nome], #[message.payload.telefone], #[message.payload.EMAIL])]]></db:parameterized-query>
                 </db:insert>
-            </otherwise>
+                <json:object-to-json-transformer doc:name="Object to JSON"/>
+            </when>
         </choice>
     </flow>
 </mule>
